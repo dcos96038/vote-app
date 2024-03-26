@@ -9,7 +9,107 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never;
+      food_places: {
+        Row: {
+          closing_time: string | null;
+          created_at: string;
+          id: string;
+          location: string | null;
+          menu: string | null;
+          name: string | null;
+          opening_time: string | null;
+          score: number | null;
+          valorations: number[] | null;
+        };
+        Insert: {
+          closing_time?: string | null;
+          created_at?: string;
+          id?: string;
+          location?: string | null;
+          menu?: string | null;
+          name?: string | null;
+          opening_time?: string | null;
+          score?: number | null;
+          valorations?: number[] | null;
+        };
+        Update: {
+          closing_time?: string | null;
+          created_at?: string;
+          id?: string;
+          location?: string | null;
+          menu?: string | null;
+          name?: string | null;
+          opening_time?: string | null;
+          score?: number | null;
+          valorations?: number[] | null;
+        };
+        Relationships: [];
+      };
+      users: {
+        Row: {
+          base_user: string;
+          created_at: string;
+          email: string | null;
+          id: string;
+        };
+        Insert: {
+          base_user: string;
+          created_at?: string;
+          email?: string | null;
+          id: string;
+        };
+        Update: {
+          base_user?: string;
+          created_at?: string;
+          email?: string | null;
+          id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "public_users_base_user_fkey";
+            columns: ["base_user"];
+            isOneToOne: true;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      valorations: {
+        Row: {
+          created_at: string;
+          food_place: string | null;
+          id: number;
+          user: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          food_place?: string | null;
+          id?: number;
+          user?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          food_place?: string | null;
+          id?: number;
+          user?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "public_valorations_food_place_fkey";
+            columns: ["food_place"];
+            isOneToOne: false;
+            referencedRelation: "food_places";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "public_valorations_user_fkey";
+            columns: ["user"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Views: {
       [_ in never]: never;
@@ -26,9 +126,11 @@ export type Database = {
   };
 };
 
+type PublicSchema = Database[Extract<keyof Database, "public">];
+
 export type Tables<
   PublicTableNameOrOptions extends
-    | keyof (Database["public"]["Tables"] & Database["public"]["Views"])
+    | keyof (PublicSchema["Tables"] & PublicSchema["Views"])
     | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
     ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
@@ -41,10 +143,10 @@ export type Tables<
     }
     ? R
     : never
-  : PublicTableNameOrOptions extends keyof (Database["public"]["Tables"] &
-        Database["public"]["Views"])
-    ? (Database["public"]["Tables"] &
-        Database["public"]["Views"])[PublicTableNameOrOptions] extends {
+  : PublicTableNameOrOptions extends keyof (PublicSchema["Tables"] &
+        PublicSchema["Views"])
+    ? (PublicSchema["Tables"] &
+        PublicSchema["Views"])[PublicTableNameOrOptions] extends {
         Row: infer R;
       }
       ? R
@@ -53,7 +155,7 @@ export type Tables<
 
 export type TablesInsert<
   PublicTableNameOrOptions extends
-    | keyof Database["public"]["Tables"]
+    | keyof PublicSchema["Tables"]
     | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
     ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
@@ -64,8 +166,8 @@ export type TablesInsert<
     }
     ? I
     : never
-  : PublicTableNameOrOptions extends keyof Database["public"]["Tables"]
-    ? Database["public"]["Tables"][PublicTableNameOrOptions] extends {
+  : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
+    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
         Insert: infer I;
       }
       ? I
@@ -74,7 +176,7 @@ export type TablesInsert<
 
 export type TablesUpdate<
   PublicTableNameOrOptions extends
-    | keyof Database["public"]["Tables"]
+    | keyof PublicSchema["Tables"]
     | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
     ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
@@ -85,8 +187,8 @@ export type TablesUpdate<
     }
     ? U
     : never
-  : PublicTableNameOrOptions extends keyof Database["public"]["Tables"]
-    ? Database["public"]["Tables"][PublicTableNameOrOptions] extends {
+  : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
+    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
         Update: infer U;
       }
       ? U
@@ -95,13 +197,13 @@ export type TablesUpdate<
 
 export type Enums<
   PublicEnumNameOrOptions extends
-    | keyof Database["public"]["Enums"]
+    | keyof PublicSchema["Enums"]
     | { schema: keyof Database },
   EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
     ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
     : never = never,
 > = PublicEnumNameOrOptions extends { schema: keyof Database }
   ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
-  : PublicEnumNameOrOptions extends keyof Database["public"]["Enums"]
-    ? Database["public"]["Enums"][PublicEnumNameOrOptions]
+  : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
+    ? PublicSchema["Enums"][PublicEnumNameOrOptions]
     : never;

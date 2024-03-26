@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/providers/auth-provider";
 import { IconBrandGoogle } from "@tabler/icons-react";

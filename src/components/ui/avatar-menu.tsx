@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 import { useAuth } from "@/providers/auth-provider";
-import { signOut } from "@/services/auth.client";
+import { signOut } from "@/services/auth/client";
 
 export function AvatarMenu() {
   const auth = useAuth();
@@ -20,7 +20,7 @@ export function AvatarMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="hover:cursor-pointer" asChild>
-        <Avatar className="rounded-full overflow-hidden size-12">
+        <Avatar className="size-12 overflow-hidden rounded-full">
           <AvatarImage src={auth.user?.user_metadata.avatar_url} />
           <AvatarFallback>{auth.user?.user_metadata.full_name}</AvatarFallback>
         </Avatar>

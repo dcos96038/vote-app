@@ -61,8 +61,6 @@ const AuthProvider = ({ accessToken, children }: AuthProviderProps) => {
     };
   }, [accessToken, router, supabase, supabase.auth]);
 
-  useEffect(() => {}, []);
-
   return (
     <AuthContext.Provider
       value={{

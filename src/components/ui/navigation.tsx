@@ -11,32 +11,41 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { usePathname } from "next/navigation";
+
+const routes = [
+  {
+    title: "Inicio",
+    href: "/home",
+  },
+  {
+    title: "Votar",
+    href: "/vote",
+  },
+  {
+    title: "Top",
+    href: "/top",
+  },
+];
 
 export function Navigation() {
+  const pathname = usePathname();
+
   return (
     <NavigationMenu>
       <NavigationMenuList>
-        <NavigationMenuItem>
-          <Link href="/home" legacyBehavior passHref>
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Inicio
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <Link href="/vote" legacyBehavior passHref>
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Votar
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <Link href="/top" legacyBehavior passHref>
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Top
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
+        {routes.map((r) => (
+          <NavigationMenuItem key={r.title}>
+            <Link href={r.href} legacyBehavior passHref>
+              <NavigationMenuLink
+                active={pathname === r.href}
+                className={navigationMenuTriggerStyle()}
+              >
+                {r.title}
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+        ))}
       </NavigationMenuList>
     </NavigationMenu>
   );

@@ -16,7 +16,7 @@ export default async function HomeLayout({
   return (
     <main className="mx-auto min-h-screen max-w-screen-lg py-2">
       <Navbar />
-      {children}
+      <div className="px-4 py-8">{children}</div>
     </main>
   );
 }

@@ -2,7 +2,7 @@ import { DebtTable } from "@/components/debt-table";
 
 export default function Home() {
   return (
-    <div className="flex flex-col gap-8 px-4 py-8">
+    <div className="flex flex-col gap-8">
       <div className="flex-1">
         <div className="text-4xl font-bold">Voterino App</div>
         <div className="text-lg text-muted-foreground">

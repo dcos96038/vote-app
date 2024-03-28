@@ -33,7 +33,7 @@ export function AvatarMenu() {
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel>{user?.user_metadata.full_name}</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={signOut}>Logout</DropdownMenuItem>
+        <DropdownMenuItem onClick={signOut}>Salir</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

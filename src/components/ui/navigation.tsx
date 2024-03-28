@@ -19,14 +19,14 @@ export function Navigation() {
         <NavigationMenuItem>
           <Link href="/home" legacyBehavior passHref>
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Home
+              Inicio
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <Link href="/votation" legacyBehavior passHref>
+          <Link href="/vote" legacyBehavior passHref>
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Votation
+              Votar
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>

@@ -23,16 +23,16 @@ export default async function RootLayout({
   return (
     <html suppressHydrationWarning lang="en">
       <body className={inter.className}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <AuthProvider accessToken={session.data.session?.access_token || ""}>
+        <AuthProvider accessToken={session.data.session?.access_token || ""}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
             {children}
-          </AuthProvider>
-        </ThemeProvider>
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );

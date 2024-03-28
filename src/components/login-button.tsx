@@ -1,14 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/providers/auth-provider";
+import { signInWithGoogle } from "@/services/auth/client";
 import { IconBrandGoogle } from "@tabler/icons-react";
 
 export const LoginButton = () => {
-  const auth = useAuth();
-
   return (
-    <Button className="w-full" onClick={auth.loginWithGoogle}>
+    <Button className="w-full" onClick={signInWithGoogle}>
       <IconBrandGoogle className="mr-2" stroke={2} /> Login with Google
     </Button>
   );

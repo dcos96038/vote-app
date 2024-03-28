@@ -1,7 +1,7 @@
-import { createClient } from "@/lib/supabase/server";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export const getFoodPlaces = async () => {
-  const supabase = createClient();
+  const supabase = createSupabaseServerClient();
   const response = await supabase.from("food_places").select("*");
   if (response.error) {
     throw response.error;

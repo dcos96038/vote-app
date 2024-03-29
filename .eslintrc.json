@@ -5,6 +5,7 @@
     "plugin:tailwindcss/recommended"
   ],
   "rules": {
-    "prettier/prettier": "warn"
+    "prettier/prettier": "warn",
+    "tailwindcss/no-custom-classname": false
   }
 }

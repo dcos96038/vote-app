@@ -26,6 +26,10 @@ const routes = [
     title: "Top",
     href: "/top",
   },
+  {
+    title: "Proponer",
+    href: "/propose",
+  },
 ];
 
 export function Navigation() {

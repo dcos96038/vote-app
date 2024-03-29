@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import AuthProvider from "@/providers/auth-provider";
 import { getSession } from "@/services/auth/server";
 import { ThemeProvider } from "@/providers/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 import "./globals.css";
 
@@ -33,6 +34,7 @@ export default async function RootLayout({
             {children}
           </ThemeProvider>
         </AuthProvider>
+        <Toaster />
       </body>
     </html>
   );

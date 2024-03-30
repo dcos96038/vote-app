@@ -19,12 +19,12 @@ const routes = [
     href: "/home",
   },
   {
-    title: "Votar",
-    href: "/vote",
-  },
-  {
     title: "Top",
     href: "/top",
+  },
+  {
+    title: "Votar",
+    href: "/vote",
   },
   {
     title: "Proponer",

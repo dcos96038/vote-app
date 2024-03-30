@@ -29,7 +29,7 @@ function ProposePage() {
 
   return (
     <form action={formAction} className="mx-auto flex max-w-2xl flex-col gap-8">
-      <h1 className="text-center text-4xl font-bold">Crear una propuesta</h1>
+      <h1 className="text-center text-4xl font-bold">Proponé un lugar</h1>
       <Input required name="name" placeholder="Nombre del local" type="text" />
       <Input required name="location" placeholder="Ubicación" type="text" />
       <Input name="menu-link" placeholder="Link del menú" type="text" />

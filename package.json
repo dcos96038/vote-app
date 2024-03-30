@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "codegen:types": "pnpm dlx supabase gen types typescript --project-id gciipswvqnvtymoayayz --schema public > src/types/global.ts"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.0.4",

@@ -6,6 +6,6 @@
   ],
   "rules": {
     "prettier/prettier": "warn",
-    "tailwindcss/no-custom-classname": false
+    "tailwindcss/no-custom-classname": 0
   }
 }

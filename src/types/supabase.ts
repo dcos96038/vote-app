@@ -278,18 +278,21 @@ export type Database = {
           id: number
           meet: number
           place: string
+          user: string | null
         }
         Insert: {
           created_at?: string
           id?: number
           meet: number
           place: string
+          user?: string | null
         }
         Update: {
           created_at?: string
           id?: number
           meet?: number
           place?: string
+          user?: string | null
         }
         Relationships: [
           {
@@ -304,6 +307,13 @@ export type Database = {
             columns: ["place"]
             isOneToOne: false
             referencedRelation: "food_places"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_weekly_votes_user_fkey"
+            columns: ["user"]
+            isOneToOne: false
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]

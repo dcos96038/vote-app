@@ -1,5 +1,5 @@
 import { Navbar } from "@/components/ui/navbar";
-import { getUser } from "@/services/auth/server";
+import { authServerService } from "@/services/auth/server";
 import { redirect } from "next/navigation";
 
 export default async function HomeLayout({
@@ -7,7 +7,7 @@ export default async function HomeLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user = await getUser();
+  const user = await authServerService.getSupabaseUser();
 
   if (!user) {
     redirect("/");

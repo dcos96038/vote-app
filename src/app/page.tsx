@@ -1,9 +1,9 @@
-import { getUser } from "@/services/auth/server";
+import { authServerService } from "@/services/auth/server";
 import { LoginButton } from "../components/login-button";
 import { redirect } from "next/navigation";
 
 export default async function Login() {
-  const user = await getUser();
+  const user = await authServerService.getSupabaseUser();
 
   if (user) {
     redirect("/home");

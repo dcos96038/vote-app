@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import { Database } from "@/types/global";
+import { Database } from "@/types/supabase";
 
 const COLUMNS = ["Nombre", "Ubicación", "Horarios", "Menú"];
 

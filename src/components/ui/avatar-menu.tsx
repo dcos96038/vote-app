@@ -11,29 +11,28 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
-import { getUser, signOut } from "@/services/auth/client";
-import { useEffect, useState } from "react";
-import { User } from "@supabase/auth-helpers-nextjs";
+import { authClientService } from "@/services/auth/client";
+import { useAuth } from "@/providers/auth-provider";
 
 export function AvatarMenu() {
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    getUser().then(setUser);
-  }, []);
+  const auth = useAuth();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="hover:cursor-pointer" asChild>
         <Avatar className="size-12 overflow-hidden rounded-full">
-          <AvatarImage src={user?.user_metadata.avatar_url} />
-          <AvatarFallback>{user?.user_metadata.full_name}</AvatarFallback>
+          <AvatarImage src={auth.user?.user_metadata.avatar_url} />
+          <AvatarFallback>{auth.user?.user_metadata.full_name}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>{user?.user_metadata.full_name}</DropdownMenuLabel>
+        <DropdownMenuLabel>
+          {auth.user?.user_metadata.full_name}
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={signOut}>Salir</DropdownMenuItem>
+        <DropdownMenuItem onClick={authClientService.signOut}>
+          Salir
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

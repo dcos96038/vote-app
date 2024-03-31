@@ -1,12 +1,12 @@
 import { createSupabaseFrontendClient } from "@/lib/supabase/client";
 
-export async function signOut() {
+async function signOut() {
   const supabase = createSupabaseFrontendClient();
 
   await supabase.auth.signOut();
 }
 
-export async function signInWithGoogle() {
+async function signInWithGoogle() {
   const supabase = createSupabaseFrontendClient();
 
   await supabase.auth.signInWithOAuth({
@@ -14,14 +14,7 @@ export async function signInWithGoogle() {
   });
 }
 
-export async function getUser() {
-  const supabase = createSupabaseFrontendClient();
-
-  const userResponse = await supabase.auth.getUser();
-
-  if (userResponse.error) {
-    throw new Error(userResponse.error.message);
-  }
-
-  return userResponse.data.user;
-}
+export const authClientService = {
+  signOut,
+  signInWithGoogle,
+};

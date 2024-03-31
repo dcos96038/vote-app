@@ -1,8 +1,8 @@
 import { TopTable } from "@/components/top-table";
-import { getVerifiedFoodPlaces } from "@/services/food-places/server";
+import { foodPlacesServerService } from "@/services/food-places/server";
 
 async function TopPage() {
-  const foodPlaces = await getVerifiedFoodPlaces();
+  const foodPlaces = await foodPlacesServerService.getVerifieds();
 
   return (
     <div>

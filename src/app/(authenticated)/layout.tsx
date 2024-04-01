@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/ui/navbar";
-import { authServerService } from "@/services/auth/server";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { AuthService } from "@/services/auth";
 import { redirect } from "next/navigation";
 
 export default async function HomeLayout({
@@ -7,7 +8,9 @@ export default async function HomeLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user = await authServerService.getSupabaseUser();
+  const authService = new AuthService(createSupabaseServerClient());
+
+  const user = await authService.getSupabaseUser();
 
   if (!user) {
     redirect("/");

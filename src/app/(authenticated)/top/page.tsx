@@ -1,8 +1,11 @@
 import { TopTable } from "@/components/top-table";
-import { foodPlacesServerService } from "@/services/food-places/server";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { FoodPlacesService } from "@/services/food-places";
 
 async function TopPage() {
-  const foodPlaces = await foodPlacesServerService.getVerifieds();
+  const foodPlacesService = new FoodPlacesService(createSupabaseServerClient());
+
+  const foodPlaces = await foodPlacesService.getVerifieds();
 
   return (
     <div>

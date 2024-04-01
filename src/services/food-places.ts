@@ -1,13 +1,14 @@
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { SupabaseClient } from "@/types/globals";
 
-const getFoodPlacesTable = () => {
-  const supabase = createSupabaseServerClient();
-  return supabase.from("food_places");
-};
+export class FoodPlacesService {
+  private readonly table;
 
-export const foodPlacesServerService = {
-  getVerifieds: async () => {
-    const response = await getFoodPlacesTable()
+  constructor(private readonly client: SupabaseClient) {
+    this.table = this.client.from("food_places");
+  }
+
+  async getVerifieds() {
+    const response = await this.table
       .select("*")
       .filter("verified", "eq", true);
 
@@ -15,9 +16,10 @@ export const foodPlacesServerService = {
       throw response.error;
     }
     return response.data;
-  },
-  getVerifiedsForVotations: async () => {
-    const response = await getFoodPlacesTable()
+  }
+
+  async getVerifiedsForVotations() {
+    const response = await this.table
       .select(`id, name, valorations (id, score), weekly_votes (id, place)`)
       .eq("verified", true);
 
@@ -33,5 +35,5 @@ export const foodPlacesServerService = {
     }));
 
     return formattedData;
-  },
-};
+  }
+}

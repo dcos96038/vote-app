@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import AuthProvider from "@/providers/auth-provider";
-import { authServerService } from "@/services/auth/server";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 
 import "./globals.css";
+import { AuthService } from "@/services/auth";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,7 +20,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await authServerService.getSession();
+  const authService = new AuthService(createSupabaseServerClient());
+  const session = await authService.getSession();
 
   return (
     <html suppressHydrationWarning lang="en">

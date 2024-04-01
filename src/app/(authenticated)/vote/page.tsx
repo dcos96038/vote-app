@@ -1,13 +1,20 @@
-import { foodPlacesServerService } from "@/services/food-places/server";
 import { VoteClientPage } from "./page.client";
-import { weeklyMeetsServerService } from "@/services/weekly-meets/server";
-import { authServerService } from "@/services/auth/server";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { WeeklyMeetsService } from "@/services/weekly-meets";
+import { FoodPlacesService } from "@/services/food-places";
+import { AuthService } from "@/services/auth";
 
 async function VotePage() {
+  const weeklyMeetsService = new WeeklyMeetsService(
+    createSupabaseServerClient(),
+  );
+  const foodPlacesService = new FoodPlacesService(createSupabaseServerClient());
+  const authService = new AuthService(createSupabaseServerClient());
+
   const [weeklyMeet, options, user] = await Promise.all([
-    weeklyMeetsServerService.getCurrentWeeklyMeet(),
-    foodPlacesServerService.getVerifiedsForVotations(),
-    authServerService.getDBUser(),
+    weeklyMeetsService.getCurrentWeeklyMeet(),
+    foodPlacesService.getVerifiedsForVotations(),
+    authService.getDBUser(),
   ]);
 
   const totalVotes = options.reduce((acc, opt) => acc + opt.votes, 0);

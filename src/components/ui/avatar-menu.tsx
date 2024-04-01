@@ -11,11 +11,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
-import { authClientService } from "@/services/auth/client";
 import { useAuth } from "@/providers/auth-provider";
+import { AuthService } from "@/services/auth";
+import { createSupabaseFrontendClient } from "@/lib/supabase/client";
 
 export function AvatarMenu() {
   const auth = useAuth();
+  const authService = new AuthService(createSupabaseFrontendClient());
 
   return (
     <DropdownMenu>
@@ -30,9 +32,7 @@ export function AvatarMenu() {
           {auth.user?.user_metadata.full_name}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={authClientService.signOut}>
-          Salir
-        </DropdownMenuItem>
+        <DropdownMenuItem onClick={authService.signOut}>Salir</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

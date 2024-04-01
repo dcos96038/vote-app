@@ -2,8 +2,9 @@
 
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
+import { createSupabaseFrontendClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
-import { weeklyVotesClientService } from "@/services/weekly-votes/client";
+import { WeeklyVotesService } from "@/services/weekly-votes";
 import { User, WeeklyMeet, WeeklyVote } from "@/types/globals";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -51,10 +52,14 @@ export const VoteClientPage: React.FC<VoteClientPage> = ({
     setLoading(true);
 
     try {
-      await weeklyVotesClientService.insert({
-        meetId: weeklyMeet.id,
-        placeId: selected,
-        userId: user.id,
+      const weeklyVotesService = new WeeklyVotesService(
+        createSupabaseFrontendClient(),
+      );
+
+      await weeklyVotesService.insert({
+        meet: weeklyMeet.id,
+        place: selected,
+        user: user.id,
       });
 
       toast.success("Votaste exitosamente!");

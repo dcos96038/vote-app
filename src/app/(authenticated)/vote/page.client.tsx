@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 import { weeklyVotesClientService } from "@/services/weekly-votes/client";
-import { Users, WeeklyMeets, WeeklyVotes } from "@/types/globals";
+import { User, WeeklyMeet, WeeklyVote } from "@/types/globals";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -19,10 +19,10 @@ interface Option {
 interface VoteClientPage {
   totalVotes: number;
   options: Option[];
-  weeklyMeet: WeeklyMeets & {
-    weekly_votes: WeeklyVotes[];
+  weeklyMeet: WeeklyMeet & {
+    weekly_votes: WeeklyVote[];
   };
-  user: Users;
+  user: User;
 }
 
 export const VoteClientPage: React.FC<VoteClientPage> = ({

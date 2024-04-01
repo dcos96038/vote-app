@@ -9,7 +9,7 @@ export class WeeklyVotesService {
     this.table = this.client.from("weekly_votes");
   }
 
-  async insert({ place, meet }: InsertWeeklyVote) {
-    await this.table.insert({ place, meet });
+  async insert({ place, meet, user }: InsertWeeklyVote) {
+    await this.table.insert({ place, meet, user });
   }
 }

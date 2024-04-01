@@ -38,6 +38,8 @@ export const VoteClientPage: React.FC<VoteClientPage> = ({
 
   const alreadyVoted = !!userVote;
 
+  const [canVote, setCanVote] = useState(alreadyVoted);
+
   const [selected, setSelected] = useState<string | null>(
     userVote ? userVote.place : null,
   );
@@ -46,7 +48,7 @@ export const VoteClientPage: React.FC<VoteClientPage> = ({
   const router = useRouter();
 
   const handleVote = async () => {
-    if (alreadyVoted) return;
+    if (!canVote) return;
     if (!selected) return;
 
     setLoading(true);
@@ -56,15 +58,25 @@ export const VoteClientPage: React.FC<VoteClientPage> = ({
         createSupabaseFrontendClient(),
       );
 
-      await weeklyVotesService.insert({
-        meet: weeklyMeet.id,
-        place: selected,
-        user: user.id,
-      });
+      if (alreadyVoted) {
+        await weeklyVotesService.update({
+          meet: weeklyMeet.id,
+          place: selected,
+          user: user.id,
+        });
 
-      toast.success("Votaste exitosamente!");
+        toast.success("Voto actualizado exitosamente!");
+      } else {
+        await weeklyVotesService.insert({
+          meet: weeklyMeet.id,
+          place: selected,
+          user: user.id,
+        });
+        toast.success("Votaste exitosamente!");
+      }
 
       router.refresh();
+      setCanVote(false);
     } catch (error) {
       toast.error("Ocurrió un error al votar");
     } finally {
@@ -79,7 +91,7 @@ export const VoteClientPage: React.FC<VoteClientPage> = ({
           setSelected((e.target as any).value);
         }}
         className="flex flex-col gap-3"
-        disabled={alreadyVoted || loading}
+        disabled={!canVote || loading}
       >
         {options.map((o) => (
           <label
@@ -89,7 +101,7 @@ export const VoteClientPage: React.FC<VoteClientPage> = ({
               {
                 "outline-green-500 outline": selected === o.id,
                 "hover:bg-slate-100/20 cursor-pointer":
-                  selected !== o.id && !alreadyVoted,
+                  selected !== o.id && canVote,
               },
             )}
           >
@@ -99,10 +111,10 @@ export const VoteClientPage: React.FC<VoteClientPage> = ({
                 "bg-slate-200/20": selected !== o.id,
               })}
               style={{
-                width: `${alreadyVoted ? (o.votes * 100) / totalVotes : 0}%`,
+                width: `${!canVote ? (o.votes * 100) / totalVotes : 0}%`,
               }}
             />
-            {alreadyVoted && (
+            {!canVote && (
               <div className="absolute flex size-full items-center justify-end px-6">
                 {Math.round((o.votes * 100) / totalVotes)}%
               </div>
@@ -118,9 +130,15 @@ export const VoteClientPage: React.FC<VoteClientPage> = ({
           </label>
         ))}
       </fieldset>
-      <Button disabled={alreadyVoted || loading} onClick={handleVote}>
-        {loading ? <Spinner /> : "Votar!"}
-      </Button>
+      {canVote ? (
+        <Button disabled={loading} onClick={handleVote}>
+          {loading ? <Spinner /> : "Votar!"}
+        </Button>
+      ) : (
+        <Button disabled={loading} onClick={() => setCanVote(true)}>
+          Cambiar voto
+        </Button>
+      )}
     </div>
   );
 };

@@ -1,5 +1,6 @@
-import { SupabaseClient } from "@/types/globals";
 import { unstable_noStore } from "next/cache";
+
+import { SupabaseClient } from "@/types/globals";
 
 export class AuthService {
   constructor(private readonly client: SupabaseClient) {}

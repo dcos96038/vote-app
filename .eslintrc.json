@@ -4,8 +4,13 @@
     "plugin:prettier/recommended",
     "plugin:tailwindcss/recommended"
   ],
+  "plugins": [
+    "simple-import-sort"
+  ],
   "rules": {
     "prettier/prettier": "warn",
-    "tailwindcss/no-custom-classname": 0
+    "tailwindcss/no-custom-classname": 0,
+    "simple-import-sort/imports": "warn",
+    "simple-import-sort/exports": "warn"
   }
 }

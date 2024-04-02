@@ -1,9 +1,10 @@
 "use client";
 
-import { createSupabaseFrontendClient } from "@/lib/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
+
+import { createSupabaseFrontendClient } from "@/lib/supabase/client";
 
 interface AuthProviderProps {
   accessToken: string;

@@ -17,6 +17,7 @@ export default function Home() {
 					</div>
 				</div>
 				<img alt="asd" />
+				<img alt="asd" />
 				<div className="flex flex-1 flex-col justify-between gap-4 rounded-lg border-2 p-5 transition-colors hover:bg-slate-100/10">
 					<div className="text-xl font-bold">Puntuación:</div>
 					{/* <div className="text-end text-3xl font-medium">4.5/5</div> */}

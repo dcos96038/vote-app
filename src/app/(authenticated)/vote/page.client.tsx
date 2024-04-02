@@ -12,134 +12,134 @@ import { WeeklyVotesService } from "@/services/weekly-votes";
 import { User, WeeklyMeet, WeeklyVote } from "@/types/globals";
 
 interface Option {
-  id: string;
-  name: string;
-  votes: number;
-  score: number;
+	id: string;
+	name: string;
+	votes: number;
+	score: number;
 }
 
 interface VoteClientPage {
-  totalVotes: number;
-  options: Option[];
-  weeklyMeet: WeeklyMeet & {
-    weekly_votes: WeeklyVote[];
-  };
-  user: User;
+	totalVotes: number;
+	options: Option[];
+	weeklyMeet: WeeklyMeet & {
+		weekly_votes: WeeklyVote[];
+	};
+	user: User;
 }
 
 export const VoteClientPage: React.FC<VoteClientPage> = ({
-  options,
-  totalVotes,
-  weeklyMeet,
-  user,
+	options,
+	totalVotes,
+	weeklyMeet,
+	user,
 }) => {
-  const userVote = weeklyMeet.weekly_votes.find(
-    (vote) => vote.user === user.id,
-  );
+	const userVote = weeklyMeet.weekly_votes.find(
+		(vote) => vote.user === user.id,
+	);
 
-  const alreadyVoted = !!userVote;
+	const alreadyVoted = !!userVote;
 
-  const [canVote, setCanVote] = useState(alreadyVoted);
+	const [canVote, setCanVote] = useState(alreadyVoted);
 
-  const [selected, setSelected] = useState<string | null>(
-    userVote ? userVote.place : null,
-  );
-  const [loading, setLoading] = useState(false);
+	const [selected, setSelected] = useState<string | null>(
+		userVote ? userVote.place : null,
+	);
+	const [loading, setLoading] = useState(false);
 
-  const router = useRouter();
+	const router = useRouter();
 
-  const handleVote = async () => {
-    if (!canVote) return;
-    if (!selected) return;
+	const handleVote = async () => {
+		if (!canVote) return;
+		if (!selected) return;
 
-    setLoading(true);
+		setLoading(true);
 
-    try {
-      const weeklyVotesService = new WeeklyVotesService(
-        createSupabaseFrontendClient(),
-      );
+		try {
+			const weeklyVotesService = new WeeklyVotesService(
+				createSupabaseFrontendClient(),
+			);
 
-      if (alreadyVoted) {
-        await weeklyVotesService.update({
-          meet: weeklyMeet.id,
-          place: selected,
-          user: user.id,
-        });
+			if (alreadyVoted) {
+				await weeklyVotesService.update({
+					meet: weeklyMeet.id,
+					place: selected,
+					user: user.id,
+				});
 
-        toast.success("Voto actualizado exitosamente!");
-      } else {
-        await weeklyVotesService.insert({
-          meet: weeklyMeet.id,
-          place: selected,
-          user: user.id,
-        });
-        toast.success("Votaste exitosamente!");
-      }
+				toast.success("Voto actualizado exitosamente!");
+			} else {
+				await weeklyVotesService.insert({
+					meet: weeklyMeet.id,
+					place: selected,
+					user: user.id,
+				});
+				toast.success("Votaste exitosamente!");
+			}
 
-      router.refresh();
-      setCanVote(false);
-    } catch (error) {
-      toast.error("Ocurrió un error al votar");
-    } finally {
-      setLoading(false);
-    }
-  };
+			router.refresh();
+			setCanVote(false);
+		} catch (error) {
+			toast.error("Ocurrió un error al votar");
+		} finally {
+			setLoading(false);
+		}
+	};
 
-  return (
-    <div className="flex flex-col gap-4">
-      <fieldset
-        onChange={(e) => {
-          setSelected((e.target as any).value);
-        }}
-        className="flex flex-col gap-3"
-        disabled={!canVote || loading}
-      >
-        {options.map((o) => (
-          <label
-            key={o.name}
-            className={cn(
-              "flex relative overflow-hidden w-full items-center gap-3 rounded-md border py-4 transition-colors",
-              {
-                "outline-green-500 outline": selected === o.id,
-                "hover:bg-slate-100/20 cursor-pointer":
-                  selected !== o.id && canVote,
-              },
-            )}
-          >
-            <div
-              className={cn("absolute h-full transition-all", {
-                "bg-green-500/50": selected === o.id,
-                "bg-slate-200/20": selected !== o.id,
-              })}
-              style={{
-                width: `${!canVote ? (o.votes * 100) / totalVotes : 0}%`,
-              }}
-            />
-            {!canVote && (
-              <div className="absolute flex size-full items-center justify-end px-6">
-                {Math.round((o.votes * 100) / totalVotes)}%
-              </div>
-            )}
-            <input
-              className="hidden"
-              type="radio"
-              name="food_place"
-              id={o.name}
-              value={o.id}
-            />
-            <span className="px-6">{o.name}</span>
-          </label>
-        ))}
-      </fieldset>
-      {canVote ? (
-        <Button disabled={loading} onClick={handleVote}>
-          {loading ? <Spinner /> : "Votar!"}
-        </Button>
-      ) : (
-        <Button disabled={loading} onClick={() => setCanVote(true)}>
-          Cambiar voto
-        </Button>
-      )}
-    </div>
-  );
+	return (
+		<div className="flex flex-col gap-4">
+			<fieldset
+				onChange={(e) => {
+					setSelected((e.target as HTMLInputElement).value);
+				}}
+				className="flex flex-col gap-3"
+				disabled={!canVote || loading}
+			>
+				{options.map((o) => (
+					<label
+						key={o.name}
+						className={cn(
+							"relative flex w-full items-center gap-3 overflow-hidden rounded-md border py-4 transition-colors",
+							{
+								"outline outline-green-500": selected === o.id,
+								"cursor-pointer hover:bg-slate-100/20":
+									selected !== o.id && canVote,
+							},
+						)}
+					>
+						<div
+							className={cn("absolute h-full transition-all", {
+								"bg-green-500/50": selected === o.id,
+								"bg-slate-200/20": selected !== o.id,
+							})}
+							style={{
+								width: `${!canVote ? (o.votes * 100) / totalVotes : 0}%`,
+							}}
+						/>
+						{!canVote && (
+							<div className="absolute flex size-full items-center justify-end px-6">
+								{Math.round((o.votes * 100) / totalVotes)}%
+							</div>
+						)}
+						<input
+							className="hidden"
+							type="radio"
+							name="food_place"
+							id={o.name}
+							value={o.id}
+						/>
+						<span className="px-6">{o.name}</span>
+					</label>
+				))}
+			</fieldset>
+			{canVote ? (
+				<Button disabled={loading} onClick={handleVote}>
+					{loading ? <Spinner /> : "Votar!"}
+				</Button>
+			) : (
+				<Button disabled={loading} onClick={() => setCanVote(true)}>
+					Cambiar voto
+				</Button>
+			)}
+		</div>
+	);
 };

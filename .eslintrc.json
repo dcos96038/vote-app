@@ -1,16 +1,17 @@
 {
-  "extends": [
-    "next/core-web-vitals",
-    "plugin:prettier/recommended",
-    "plugin:tailwindcss/recommended"
-  ],
-  "plugins": [
-    "simple-import-sort"
-  ],
-  "rules": {
-    "prettier/prettier": "warn",
-    "tailwindcss/no-custom-classname": 0,
-    "simple-import-sort/imports": "warn",
-    "simple-import-sort/exports": "warn"
-  }
+	"extends": [
+		"next",
+		"eslint:recommended",
+		"plugin:@typescript-eslint/recommended",
+		"plugin:@typescript-eslint/recommended-type-checked"
+	],
+	"parser": "@typescript-eslint/parser",
+	"parserOptions": {
+		"project": "./tsconfig.json"
+	},
+	"rules": {
+		"@typescript-eslint/no-misused-promises": "off",
+		"@typescript-eslint/no-unsafe-argument": "off",
+		"@typescript-eslint/unbound-method": "off"
+	}
 }

@@ -3,15 +3,15 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { FoodPlacesService } from "@/services/food-places";
 
 async function TopPage() {
-  const foodPlacesService = new FoodPlacesService(createSupabaseServerClient());
+	const foodPlacesService = new FoodPlacesService(createSupabaseServerClient());
 
-  const foodPlaces = await foodPlacesService.getVerifieds();
+	const foodPlaces = await foodPlacesService.getVerifieds();
 
-  return (
-    <div>
-      <TopTable data={foodPlaces} />
-    </div>
-  );
+	return (
+		<div>
+			<TopTable data={foodPlaces} />
+		</div>
+	);
 }
 
 export default TopPage;

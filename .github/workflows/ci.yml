@@ -27,12 +27,8 @@ jobs:
         cache: 'pnpm'
     - name: Install dependencies
       run: pnpm install
-    - name: Run lint
-      run: |
-        if ! pnpm lint; then
-          echo "Lint checks failed. Please review and fix the issues."
-          exit 1
-        fi
+    - name: Run Lint
+      run: pnpm eslint . --report-unused-disable-directives --max-warnings 0
     - name: Comment on PR if lint fails
       if: ${{ failure() }}
       run: |

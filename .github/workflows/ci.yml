@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  pull_request:
+    branches: ['main']
+  push:
+    branches: ['main']
+concurrency:
+  group: ${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+  
+jobs:
+  linter:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        node-version: [20.10.0]
+    steps:
+    - uses: actions/checkout@v3
+    - uses: pnpm/action-setup@v3
+      with:
+        version: 8
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'pnpm'
+    - name: Install dependencies
+      run: pnpm install
+    - name: Run lint
+      run: pnpm lint
+    - name: Comment on PR if lint fails
+      if: ${{ failure() }}
+      run: |
+        echo "Lint checks failed. Please review and fix the issues."
+        exit 1

@@ -24,8 +24,8 @@ export const NavigationMobile: React.FC<NavigationMobileProps> = ({
 	const pathname = usePathname();
 
 	return (
-		<Sheet open={isOpen}>
-			<SheetTrigger className="sm:hidden" onClick={() => setIsOpen(true)}>
+		<Sheet onOpenChange={setIsOpen} open={isOpen}>
+			<SheetTrigger className="sm:hidden">
 				<IconMenu2 stroke={2} />
 			</SheetTrigger>
 			<SheetContent side="left">

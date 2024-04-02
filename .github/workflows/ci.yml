@@ -28,9 +28,14 @@ jobs:
     - name: Install dependencies
       run: pnpm install
     - name: Run lint
-      run: pnpm lint
+      run: |
+        if ! pnpm lint; then
+          echo "Lint checks failed. Please review and fix the issues."
+          exit 1
+        fi
     - name: Comment on PR if lint fails
       if: ${{ failure() }}
       run: |
-        echo "Lint checks failed. Please review and fix the issues."
+        echo "This step should not run if linting failed. If you see this message, there might be a misconfiguration."
         exit 1
+

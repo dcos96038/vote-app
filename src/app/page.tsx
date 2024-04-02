@@ -1,7 +1,9 @@
-import { LoginButton } from "../components/login-button";
 import { redirect } from "next/navigation";
-import { AuthService } from "@/services/auth";
+
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { AuthService } from "@/services/auth";
+
+import { LoginButton } from "../components/login-button";
 
 export default async function Login() {
   const authService = new AuthService(createSupabaseServerClient());

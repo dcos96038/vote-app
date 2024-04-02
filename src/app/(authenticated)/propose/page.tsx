@@ -1,11 +1,13 @@
 "use client";
 
+import { useEffect } from "react";
+import { useFormState } from "react-dom";
+import { toast } from "sonner";
+
 import { createFoodPlaceProposal } from "@/actions/food-places";
 import { Input } from "@/components/ui/input";
+
 import { SubmitButton } from "./submit-button";
-import { useFormState } from "react-dom";
-import { useEffect } from "react";
-import { toast } from "sonner";
 
 const initialState: {
   message: string | null;

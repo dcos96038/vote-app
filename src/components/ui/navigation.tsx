@@ -1,9 +1,9 @@
 "use client";
 
-import * as React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import * as React from "react";
 
-import { cn } from "@/lib/utils";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -11,7 +11,9 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+
+import { NavigationMobile } from "./navigation-mobile";
 
 const routes = [
   {
@@ -36,22 +38,26 @@ export function Navigation() {
   const pathname = usePathname();
 
   return (
-    <NavigationMenu>
-      <NavigationMenuList>
-        {routes.map((r) => (
-          <NavigationMenuItem key={r.title}>
-            <Link href={r.href} legacyBehavior passHref>
-              <NavigationMenuLink
-                active={pathname === r.href}
-                className={navigationMenuTriggerStyle()}
-              >
-                {r.title}
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
-        ))}
-      </NavigationMenuList>
-    </NavigationMenu>
+    <div>
+      <NavigationMenu className="hidden sm:block">
+        <NavigationMenuList>
+          {routes.map((r) => (
+            <NavigationMenuItem key={r.title}>
+              <Link href={r.href} legacyBehavior passHref>
+                <NavigationMenuLink
+                  active={pathname === r.href}
+                  className={navigationMenuTriggerStyle()}
+                >
+                  {r.title}
+                </NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
+          ))}
+        </NavigationMenuList>
+      </NavigationMenu>
+
+      <NavigationMobile routes={routes} />
+    </div>
   );
 }
 

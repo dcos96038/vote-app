@@ -1,9 +1,10 @@
 "use client";
 
+import { IconBrandGoogle } from "@tabler/icons-react";
+
 import { Button } from "@/components/ui/button";
 import { createSupabaseFrontendClient } from "@/lib/supabase/client";
 import { AuthService } from "@/services/auth";
-import { IconBrandGoogle } from "@tabler/icons-react";
 
 export const LoginButton = () => {
   const authService = new AuthService(createSupabaseFrontendClient());

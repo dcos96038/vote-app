@@ -1,7 +1,8 @@
+import { redirect } from "next/navigation";
+
 import { Navbar } from "@/components/ui/navbar";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { AuthService } from "@/services/auth";
-import { redirect } from "next/navigation";
 
 export default async function HomeLayout({
   children,

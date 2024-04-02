@@ -10,10 +10,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
+import { createSupabaseFrontendClient } from "@/lib/supabase/client";
 import { useAuth } from "@/providers/auth-provider";
 import { AuthService } from "@/services/auth";
-import { createSupabaseFrontendClient } from "@/lib/supabase/client";
+
+import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 
 export function AvatarMenu() {
   const auth = useAuth();

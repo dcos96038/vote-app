@@ -1,8 +1,9 @@
-import { VoteClientPage } from "./page.client";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { WeeklyMeetsService } from "@/services/weekly-meets";
-import { FoodPlacesService } from "@/services/food-places";
 import { AuthService } from "@/services/auth";
+import { FoodPlacesService } from "@/services/food-places";
+import { WeeklyMeetsService } from "@/services/weekly-meets";
+
+import { VoteClientPage } from "./page.client";
 
 async function VotePage() {
   const weeklyMeetsService = new WeeklyMeetsService(

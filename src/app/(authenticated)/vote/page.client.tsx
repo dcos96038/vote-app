@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -10,6 +10,8 @@ import { createSupabaseFrontendClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import { WeeklyVotesService } from "@/services/weekly-votes";
 import { User, WeeklyMeet, WeeklyVote } from "@/types/globals";
+
+import { FoodPlacesService } from "@/services/food-places";
 
 interface Option {
 	id: string;
@@ -37,16 +39,16 @@ export const VoteClientPage: React.FC<VoteClientPage> = ({
 		(vote) => vote.user === user.id,
 	);
 
+	const [optionVotes, setOptionVotes] = useState(options)
+
 	const alreadyVoted = !!userVote;
 
-	const [canVote, setCanVote] = useState(alreadyVoted);
+	const [canVote, setCanVote] = useState(false);
 
 	const [selected, setSelected] = useState<string | null>(
 		userVote ? userVote.place : null,
 	);
 	const [loading, setLoading] = useState(false);
-
-	const router = useRouter();
 
 	const handleVote = async () => {
 		if (!canVote) return;
@@ -60,12 +62,22 @@ export const VoteClientPage: React.FC<VoteClientPage> = ({
 			);
 
 			if (alreadyVoted) {
-				await weeklyVotesService.update({
+				const res = await weeklyVotesService.update({
 					meet: weeklyMeet.id,
 					place: selected,
 					user: user.id,
 				});
 
+				if (res.data?.length == 0) {
+					toast.error("Ocurrió un error al votar")
+					return
+				}
+
+				const foodPlacesService = new FoodPlacesService(createSupabaseFrontendClient());
+				const newOptions = await foodPlacesService.getVerifiedsForVotations();
+
+				setOptionVotes(newOptions)
+				setCanVote(false);
 				toast.success("Voto actualizado exitosamente!");
 			} else {
 				await weeklyVotesService.insert({
@@ -75,9 +87,6 @@ export const VoteClientPage: React.FC<VoteClientPage> = ({
 				});
 				toast.success("Votaste exitosamente!");
 			}
-
-			router.refresh();
-			setCanVote(false);
 		} catch (error) {
 			toast.error("Ocurrió un error al votar");
 		} finally {
@@ -94,7 +103,7 @@ export const VoteClientPage: React.FC<VoteClientPage> = ({
 				className="flex flex-col gap-3"
 				disabled={!canVote || loading}
 			>
-				{options.map((o) => (
+				{optionVotes.map((o) => (
 					<label
 						key={o.name}
 						className={cn(

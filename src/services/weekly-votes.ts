@@ -12,6 +12,6 @@ export class WeeklyVotesService {
 	}
 
 	async update({ place, meet, user }: InsertWeeklyVote) {
-		await this.table.update({ place }).match({ user, meet });
+		return await this.table.update({ place }).match({ user, meet }).select();
 	}
 }

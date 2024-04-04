@@ -1,16 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
-import { createSupabaseFrontendClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils/globals";
-import { WeeklyVotesService } from "@/services/weekly-votes";
 import { User, WeeklyMeet, WeeklyVote } from "@/types/globals";
-
-import { FoodPlacesService } from "@/services/food-places";
 
 interface Option {
 	id: string;
@@ -26,6 +22,13 @@ interface VoteClientPage {
 		weekly_votes: WeeklyVote[];
 	};
 	user: User;
+	userSelectedPlace: string | null;
+	updateVoteForPlace: (
+		place: string,
+		user: string,
+		meet: number,
+	) => Promise<void>;
+	voteForPlace: (place: string, user: string, meet: number) => Promise<void>;
 }
 
 export const VoteClientPage: React.FC<VoteClientPage> = ({
@@ -33,93 +36,95 @@ export const VoteClientPage: React.FC<VoteClientPage> = ({
 	totalVotes,
 	weeklyMeet,
 	user,
+	userSelectedPlace,
+	updateVoteForPlace,
+	voteForPlace,
 }) => {
-	const userVote = weeklyMeet.weekly_votes.find(
-		(vote) => vote.user === user.id,
-	);
+	const alreadyVoted = !!userSelectedPlace;
 
-	const [optionVotes, setOptionVotes] = useState(options);
+	const [canVote, setCanVote] = useState(!alreadyVoted);
 
-	const alreadyVoted = !!userVote;
-
-	const [canVote, setCanVote] = useState(false);
-
-	const [selected, setSelected] = useState<string | null>(
-		userVote ? userVote.place : null,
+	const [selectedOption, setSelectedOption] = useState<string | null>(
+		userSelectedPlace,
 	);
 	const [loading, setLoading] = useState(false);
 
 	const handleVote = async () => {
 		if (!canVote) return;
-		if (!selected) return;
+		if (!selectedOption) return;
 
 		setLoading(true);
 
 		try {
-			const weeklyVotesService = new WeeklyVotesService(
-				createSupabaseFrontendClient(),
-			);
-
 			if (alreadyVoted) {
-				const res = await weeklyVotesService.update({
-					meet: weeklyMeet.id,
-					place: selected,
-					user: user.id,
-				});
-
-				if (res.data?.length == 0) {
-					toast.error("Ocurrió un error al votar");
-					return;
-				}
-
-				const foodPlacesService = new FoodPlacesService(
-					createSupabaseFrontendClient(),
-				);
-				const newOptions = await foodPlacesService.getVerifiedsForVotations();
-
-				setOptionVotes(newOptions);
-				setCanVote(false);
+				await updateVoteForPlace(selectedOption, user.id, weeklyMeet.id);
 				toast.success("Voto actualizado exitosamente!");
 			} else {
-				await weeklyVotesService.insert({
-					meet: weeklyMeet.id,
-					place: selected,
-					user: user.id,
-				});
+				await voteForPlace(selectedOption, user.id, weeklyMeet.id);
 				toast.success("Votaste exitosamente!");
 			}
 		} catch (error) {
+			console.log(error);
 			toast.error("Ocurrió un error al votar");
 		} finally {
 			setLoading(false);
 		}
 	};
 
+	const renderActionButton = () => {
+		if (!alreadyVoted) {
+			return (
+				<Button disabled={loading} onClick={handleVote}>
+					{loading ? <Spinner /> : "Votar!"}
+				</Button>
+			);
+		}
+
+		if (canVote) {
+			return (
+				<Button disabled={loading} onClick={handleVote}>
+					{loading ? <Spinner /> : "Votar"}
+				</Button>
+			);
+		}
+		return (
+			<Button disabled={loading} onClick={() => setCanVote(true)}>
+				Cambiar Voto!
+			</Button>
+		);
+	};
+
+	useEffect(() => {
+		if (userSelectedPlace) {
+			setCanVote(false);
+		}
+	}, [userSelectedPlace, options]);
+
 	return (
 		<div className="flex flex-col gap-4">
 			<fieldset
 				onChange={(e) => {
-					setSelected((e.target as HTMLInputElement).value);
+					setSelectedOption((e.target as HTMLInputElement).value);
 				}}
 				className="flex flex-col gap-3"
 				disabled={!canVote || loading}
 			>
-				{optionVotes.map((o) => (
+				{options.map((o) => (
 					<label
 						key={o.name}
 						className={cn(
 							"relative flex w-full items-center gap-3 overflow-hidden rounded-md border py-4 transition-colors",
 							{
-								"outline outline-green-500": selected === o.id,
+								"outline outline-green-500": selectedOption === o.id,
 								"cursor-pointer hover:bg-slate-100/20":
-									selected !== o.id && canVote,
+									selectedOption !== o.id && canVote,
 							},
 						)}
 					>
 						<div
 							className={cn("absolute h-full transition-all", {
-								"bg-green-500/50": selected === o.id,
-								"bg-slate-200/20": selected !== o.id,
+								"bg-green-500/50": selectedOption === o.id,
+								"bg-slate-200/20": selectedOption !== o.id,
 							})}
 							style={{
 								width: `${!canVote ? (o.votes * 100) / totalVotes : 0}%`,
@@ -141,15 +146,7 @@ export const VoteClientPage: React.FC<VoteClientPage> = ({
 					</label>
 				))}
 			</fieldset>
-			{canVote ? (
-				<Button disabled={loading} onClick={handleVote}>
-					{loading ? <Spinner /> : "Votar!"}
-				</Button>
-			) : (
-				<Button disabled={loading} onClick={() => setCanVote(true)}>
-					Cambiar voto
-				</Button>
-			)}
+			{renderActionButton()}
 		</div>
 	);
 };

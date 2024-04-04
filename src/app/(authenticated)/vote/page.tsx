@@ -4,6 +4,7 @@ import { FoodPlacesService } from "@/services/food-places";
 import { WeeklyMeetsService } from "@/services/weekly-meets";
 
 import { VoteClientPage } from "./page.client";
+import { updateVoteForPlace, voteForPlace } from "@/actions/votation";
 
 async function VotePage() {
 	const weeklyMeetsService = new WeeklyMeetsService(
@@ -28,6 +29,10 @@ async function VotePage() {
 		throw new Error("No se encontró el usuario");
 	}
 
+	const userVote = weeklyMeet.weekly_votes.find(
+		(vote) => vote.user === user.id,
+	);
+
 	return (
 		<div className="flex flex-col gap-10">
 			<h1 className="text-center text-4xl font-bold">Votación de la semana</h1>
@@ -36,6 +41,9 @@ async function VotePage() {
 				weeklyMeet={weeklyMeet}
 				options={options}
 				totalVotes={totalVotes}
+				updateVoteForPlace={updateVoteForPlace}
+				voteForPlace={voteForPlace}
+				userSelectedPlace={userVote?.place ?? null}
 			/>
 		</div>
 	);

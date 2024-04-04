@@ -7,7 +7,7 @@ export class WeeklyMeetsService {
 		this.table = this.client.from("weekly_meets");
 	}
 
-	async getCurrentWeeklyMeet() {
+	async getActiveWeeklyMeet() {
 		const response = await this.table
 			.select(`*, weekly_votes(*)`)
 			.order("date", { ascending: false })
@@ -19,5 +19,31 @@ export class WeeklyMeetsService {
 		}
 
 		return response.data;
+	}
+
+	async getMostVotedPlaceIdFromActiveMeet() {
+		const activeWeeklyMeet = await this.getActiveWeeklyMeet();
+
+		const weeklyVotes = activeWeeklyMeet.weekly_votes;
+
+		const votesById: Record<string, number> = {};
+
+		for (const vote of weeklyVotes) {
+			const placeId = vote.place;
+			votesById[placeId] = (votesById[placeId] || 0) + 1;
+		}
+
+		const mostVotedPlaceId = Object.entries(votesById).reduce(
+			(acc, [id, votes]) => {
+				if (votes > acc.votes) {
+					return { id, votes };
+				}
+
+				return acc;
+			},
+			{ id: "", votes: 0 },
+		).id;
+
+		return mostVotedPlaceId;
 	}
 }

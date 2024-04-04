@@ -36,4 +36,26 @@ export class FoodPlacesService {
 
 		return formattedData;
 	}
+
+	async get(id: string) {
+		const response = await this.table
+			.select(`*, valorations (*)`)
+			.eq("id", id)
+			.single();
+
+		if (response.error) {
+			throw response.error;
+		}
+
+		const formattedData = {
+			name: response.data.name,
+			location: response.data.location,
+			score: response.data.valorations.reduce(
+				(acc, v) => acc + (v.score ?? 0),
+				0,
+			),
+		};
+
+		return formattedData;
+	}
 }

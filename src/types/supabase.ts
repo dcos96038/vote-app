@@ -93,7 +93,7 @@ export type Database = {
 					base_user: string;
 					created_at?: string;
 					email?: string | null;
-					id: string;
+					id?: string;
 					role?: Database["public"]["Enums"]["Roles"] | null;
 				};
 				Update: {

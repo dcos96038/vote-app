@@ -13,7 +13,7 @@ async function VotePage() {
 	const authService = new AuthService(createSupabaseServerClient());
 
 	const [weeklyMeet, options, user] = await Promise.all([
-		weeklyMeetsService.getCurrentWeeklyMeet(),
+		weeklyMeetsService.getActiveWeeklyMeet(),
 		foodPlacesService.getVerifiedsForVotations(),
 		authService.getDBUser(),
 	]);

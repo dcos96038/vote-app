@@ -15,6 +15,9 @@ export type InsertWeeklyMeet =
 export type FoodPlace = Database["public"]["Tables"]["food_places"]["Row"];
 export type InsertFoodPlace =
 	Database["public"]["Tables"]["food_places"]["Insert"];
+export type FoodPlaceWithValorations = FoodPlace & {
+	valorations: Valoration[];
+};
 
 export type User = Database["public"]["Tables"]["users"]["Row"];
 export type InsertUser = Database["public"]["Tables"]["users"]["Insert"];

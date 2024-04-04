@@ -1,4 +1,4 @@
-import { SupabaseClient } from "@/types/globals";
+import { FoodPlaceWithValorations, SupabaseClient } from "@/types/globals";
 
 export class FoodPlacesService {
 	private readonly table;
@@ -37,7 +37,7 @@ export class FoodPlacesService {
 		return formattedData;
 	}
 
-	async get(id: string) {
+	async get(id: string): Promise<FoodPlaceWithValorations> {
 		const response = await this.table
 			.select(`*, valorations (*)`)
 			.eq("id", id)
@@ -47,15 +47,6 @@ export class FoodPlacesService {
 			throw response.error;
 		}
 
-		const formattedData = {
-			name: response.data.name,
-			location: response.data.location,
-			score: response.data.valorations.reduce(
-				(acc, v) => acc + (v.score ?? 0),
-				0,
-			),
-		};
-
-		return formattedData;
+		return response.data;
 	}
 }

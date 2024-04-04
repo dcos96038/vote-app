@@ -1,13 +1,12 @@
 "use client";
 
-
 import { useState } from "react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { createSupabaseFrontendClient } from "@/lib/supabase/client";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/globals";
 import { WeeklyVotesService } from "@/services/weekly-votes";
 import { User, WeeklyMeet, WeeklyVote } from "@/types/globals";
 
@@ -39,7 +38,7 @@ export const VoteClientPage: React.FC<VoteClientPage> = ({
 		(vote) => vote.user === user.id,
 	);
 
-	const [optionVotes, setOptionVotes] = useState(options)
+	const [optionVotes, setOptionVotes] = useState(options);
 
 	const alreadyVoted = !!userVote;
 
@@ -69,14 +68,16 @@ export const VoteClientPage: React.FC<VoteClientPage> = ({
 				});
 
 				if (res.data?.length == 0) {
-					toast.error("Ocurrió un error al votar")
-					return
+					toast.error("Ocurrió un error al votar");
+					return;
 				}
 
-				const foodPlacesService = new FoodPlacesService(createSupabaseFrontendClient());
+				const foodPlacesService = new FoodPlacesService(
+					createSupabaseFrontendClient(),
+				);
 				const newOptions = await foodPlacesService.getVerifiedsForVotations();
 
-				setOptionVotes(newOptions)
+				setOptionVotes(newOptions);
 				setCanVote(false);
 				toast.success("Voto actualizado exitosamente!");
 			} else {

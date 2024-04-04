@@ -6,7 +6,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/globals";
 import { Database } from "@/types/supabase";
 
 const COLUMNS = ["Nombre", "Ubicación", "Horarios", "Menú"];

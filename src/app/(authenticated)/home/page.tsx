@@ -23,9 +23,11 @@ export default async function Home() {
 
 	const renderScore = (place: FoodPlaceWithValorations) => {
 		if (place.valorations.length === 0) {
-			<div className="text-lg text-muted-foreground">
-				Este lugar todavía no tiene votos
-			</div>;
+			return (
+				<div className="text-lg text-muted-foreground">
+					Este lugar todavía no tiene votos
+				</div>
+			);
 		}
 
 		const score = getFoodPlaceScore(place);
